@@ -1,86 +1,47 @@
-import { api } from './api';
 import type { MediaItem, BehaviorSignal } from '@/types';
-
-interface RecommendationParams {
-  currentItemId?: string;
-  limit?: number;
-  excludeIds?: string[];
-}
-
-interface BehaviorBatch {
-  signals: BehaviorSignal[];
-  sessionId: string;
-}
 
 // Local behavior buffer for batching
 const behaviorBuffer: BehaviorSignal[] = [];
-let flushTimeout: NodeJS.Timeout | null = null;
 const sessionId = crypto.randomUUID();
 
 export const recommendationService = {
-  async getRecommendations(params: RecommendationParams): Promise<MediaItem[]> {
-    const { currentItemId, limit = 10, excludeIds = [] } = params;
-
-    return api.post<MediaItem[]>('/recommendations', {
-      currentItemId,
-      limit,
-      excludeIds,
-      sessionId,
-    });
+  async getRecommendations(_params: {
+    currentItemId?: string;
+    limit?: number;
+    excludeIds?: string[];
+  }): Promise<MediaItem[]> {
+    // In standalone mode, just return empty array
+    // Real implementation would call the API
+    return [];
   },
 
-  async getForYouFeed(offset = 0, limit = 10): Promise<{
+  async getForYouFeed(_offset = 0, _limit = 10): Promise<{
     items: MediaItem[];
     hasMore: boolean;
   }> {
-    return api.get('/recommendations/for-you', {
-      offset,
-      limit,
-      sessionId,
-    });
+    // In standalone mode, feedService handles this
+    return { items: [], hasMore: false };
   },
 
   recordBehavior(signal: BehaviorSignal): void {
     behaviorBuffer.push(signal);
-
-    // Debounce flush
-    if (flushTimeout) {
-      clearTimeout(flushTimeout);
-    }
-
-    flushTimeout = setTimeout(() => {
-      this.flushBehaviors();
-    }, 2000);
-
-    // Flush immediately if buffer is large
-    if (behaviorBuffer.length >= 10) {
-      this.flushBehaviors();
+    // In standalone mode, just store locally
+    // Could be sent to analytics or stored in localStorage
+    if (behaviorBuffer.length > 100) {
+      behaviorBuffer.splice(0, 50); // Keep last 50
     }
   },
 
   async flushBehaviors(): Promise<void> {
-    if (behaviorBuffer.length === 0) return;
-
-    const batch: BehaviorBatch = {
-      signals: [...behaviorBuffer],
-      sessionId,
-    };
-
-    behaviorBuffer.length = 0;
-
-    try {
-      await api.post('/recommendations/behaviors', batch);
-    } catch {
-      // Re-add to buffer on failure
-      behaviorBuffer.push(...batch.signals);
-    }
+    // In standalone mode, behaviors are just stored locally
+    console.log('Behaviors to flush:', behaviorBuffer.length);
   },
 
-  async getSimilarItems(itemId: string, limit = 10): Promise<MediaItem[]> {
-    return api.get<MediaItem[]>(`/recommendations/similar/${itemId}`, { limit });
+  async getSimilarItems(_itemId: string, _limit = 10): Promise<MediaItem[]> {
+    return [];
   },
 
-  async getCreatorRecommendations(limit = 10): Promise<
+  async getCreatorRecommendations(_limit = 10): Promise<
     Array<{
       id: string;
       name: string;
@@ -89,7 +50,7 @@ export const recommendationService = {
       sampleItems: MediaItem[];
     }>
   > {
-    return api.get('/recommendations/creators', { limit });
+    return [];
   },
 
   async getCategoryRecommendations(): Promise<
@@ -99,11 +60,12 @@ export const recommendationService = {
       reason: string;
     }>
   > {
-    return api.get('/recommendations/categories');
+    return [];
   },
 
-  async provideFeedback(itemId: string, feedback: 'not_interested' | 'report'): Promise<void> {
-    await api.post('/recommendations/feedback', { itemId, feedback });
+  async provideFeedback(_itemId: string, _feedback: 'not_interested' | 'report'): Promise<void> {
+    // In standalone mode, just log
+    console.log('Feedback recorded');
   },
 
   getSessionId(): string {

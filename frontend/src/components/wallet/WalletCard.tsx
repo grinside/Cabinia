@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Plus, ArrowUpRight, ArrowDownLeft, Repeat } from 'lucide-react';
+import { Eye, EyeOff, Plus, ArrowUpRight, Repeat } from 'lucide-react';
 import { useState } from 'react';
 import { formatCurrency } from '@/lib/utils';
 import type { WalletInfo } from '@/types';

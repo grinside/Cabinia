@@ -1,5 +1,5 @@
-import { api } from './api';
 import type { MediaItem, SearchFilters, SearchSort } from '@/types';
+import { feedService } from './feedService';
 
 interface SearchParams {
   query: string;
@@ -16,54 +16,91 @@ interface SearchResponse {
   totalCount: number;
 }
 
+// Demo trending searches
+const TRENDING_SEARCHES = [
+  'dance challenge',
+  'afrobeats',
+  'cooking',
+  'football',
+  'comedy',
+  'lagos',
+  'abidjan',
+  'fashion',
+];
+
 export const searchService = {
   async search(params: SearchParams): Promise<SearchResponse> {
-    const { query, filters = {}, sort = 'relevance', offset = 0, limit = 20 } = params;
+    const { query, offset = 0, limit = 20 } = params;
 
-    return api.post<SearchResponse>('/search', {
-      query,
-      filters,
-      sort,
-      offset,
-      limit,
-    });
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // Get all feed items and filter by query
+    const allItems = await feedService.getFeed({ offset: 0, limit: 100 });
+    const queryLower = query.toLowerCase();
+
+    const filteredItems = allItems.items.filter(
+      (item) =>
+        item.title.toLowerCase().includes(queryLower) ||
+        item.description.toLowerCase().includes(queryLower) ||
+        item.tags.some((tag) => tag.toLowerCase().includes(queryLower)) ||
+        item.creator.name.toLowerCase().includes(queryLower)
+    );
+
+    const items = filteredItems.slice(offset, offset + limit);
+
+    return {
+      items,
+      suggestions: [],
+      relatedSearches: TRENDING_SEARCHES.filter((s) => s.includes(queryLower)).slice(0, 5),
+      totalCount: filteredItems.length,
+    };
   },
 
   async getSuggestions(query: string): Promise<string[]> {
     if (query.length < 2) return [];
-    return api.get<string[]>('/search/suggestions', { query });
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const queryLower = query.toLowerCase();
+    return TRENDING_SEARCHES.filter((s) => s.includes(queryLower)).slice(0, 8);
   },
 
   async getTrendingSearches(): Promise<string[]> {
-    return api.get<string[]>('/search/trending');
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return TRENDING_SEARCHES;
   },
 
   async getPersonalizedSuggestions(): Promise<string[]> {
-    return api.get<string[]>('/search/personalized');
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return TRENDING_SEARCHES.slice(0, 5);
   },
 
-  async semanticSearch(params: {
+  async semanticSearch(_params: {
     query: string;
     useEmbeddings?: boolean;
     contextItemId?: string;
   }): Promise<MediaItem[]> {
-    return api.post<MediaItem[]>('/search/semantic', params);
+    // In standalone mode, use regular search
+    const result = await this.search({ query: _params.query });
+    return result.items;
   },
 
-  async visualSearch(imageData: string): Promise<MediaItem[]> {
-    return api.post<MediaItem[]>('/search/visual', { image: imageData });
+  async visualSearch(_imageData: string): Promise<MediaItem[]> {
+    // Not available in standalone mode
+    return [];
   },
 
-  async voiceSearch(audioData: Blob): Promise<{
+  async voiceSearch(_audioData: Blob): Promise<{
     transcript: string;
     results: MediaItem[];
   }> {
-    const formData = new FormData();
-    formData.append('audio', audioData);
-    return api.post('/search/voice', formData);
+    // Not available in standalone mode
+    return { transcript: '', results: [] };
   },
 
-  async recordSearchClick(query: string, itemId: string): Promise<void> {
-    await api.post('/search/analytics/click', { query, itemId });
+  async recordSearchClick(_query: string, _itemId: string): Promise<void> {
+    // In standalone mode, just log
+    console.log('Search click recorded');
   },
 };

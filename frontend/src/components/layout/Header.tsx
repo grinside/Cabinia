@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Settings, ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Bell } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
 

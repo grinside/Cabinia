@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, RefreshCw, Loader2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { WalletCard } from '@/components/wallet/WalletCard';
@@ -10,13 +10,14 @@ import { PaymentMethodList } from '@/components/wallet/PaymentMethodList';
 import { useWalletStore } from '@/stores/walletStore';
 import { useAuthStore } from '@/stores/authStore';
 import { AuthModal } from '@/components/auth/AuthModal';
+import type { Transaction } from '@/types';
 
 type Tab = 'overview' | 'transactions' | 'methods';
 
 export function WalletPage() {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [transactions, setTransactions] = useState<typeof wallet.transactions>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [transactionsPage, setTransactionsPage] = useState(1);
   const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
 

@@ -1,10 +1,9 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, SlidersHorizontal, Play } from 'lucide-react';
 import { useSearchStore } from '@/stores/searchStore';
 import type { MediaItem } from '@/types';
 import { formatNumber, formatDuration } from '@/lib/utils';
-import { cn } from '@/lib/utils';
 
 interface SearchResultsProps {
   onItemClick: (item: MediaItem) => void;

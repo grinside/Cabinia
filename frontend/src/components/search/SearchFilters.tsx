@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { X, SlidersHorizontal, Calendar, Clock, User } from 'lucide-react';
 import { useSearchStore } from '@/stores/searchStore';
-import type { SearchFilters, SearchSort } from '@/types';
+import type { SearchSort } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface SearchFiltersProps {

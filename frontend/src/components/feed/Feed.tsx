@@ -93,7 +93,6 @@ export function Feed({ onCommentOpen, onCreatorClick, className }: FeedProps) {
 
   // Wheel navigation
   useEffect(() => {
-    let wheelTimeout: NodeJS.Timeout;
     let lastWheelTime = 0;
 
     const handleWheel = (e: WheelEvent) => {
@@ -120,7 +119,6 @@ export function Feed({ onCommentOpen, onCreatorClick, className }: FeedProps) {
       if (container) {
         container.removeEventListener('wheel', handleWheel);
       }
-      clearTimeout(wheelTimeout);
     };
   }, [goToNext, goToPrevious]);
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
@@ -59,13 +59,16 @@ export function SearchBar({ onFocus, onBlur, className }: SearchBarProps) {
   };
 
   const handleVoiceSearch = async () => {
-    if (!('webkitSpeechRecognition' in window)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+    const SpeechRecognitionClass = win.SpeechRecognition || win.webkitSpeechRecognition;
+
+    if (!SpeechRecognitionClass) {
       alert('Voice search is not supported in this browser');
       return;
     }
 
-    const SpeechRecognition = (window as Window & { webkitSpeechRecognition: new () => SpeechRecognition }).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const recognition = new SpeechRecognitionClass();
 
     recognition.lang = 'fr-FR';
     recognition.continuous = false;
@@ -74,7 +77,8 @@ export function SearchBar({ onFocus, onBlur, className }: SearchBarProps) {
     recognition.onend = () => setIsListening(false);
     recognition.onerror = () => setIsListening(false);
 
-    recognition.onresult = (event) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setQuery(transcript);
       search(transcript);
@@ -147,7 +151,7 @@ export function SearchBar({ onFocus, onBlur, className }: SearchBarProps) {
             {/* Suggestions */}
             {suggestions.length > 0 && (
               <div className="p-2">
-                {suggestions.map((suggestion, index) => (
+                {suggestions.map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => handleSuggestionClick(suggestion)}

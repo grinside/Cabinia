@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 
 export function HomePage() {
-  const [commentItemId, setCommentItemId] = useState<string | null>(null);
+  const [, setCommentItemId] = useState<string | null>(null);
 
   return (
     <div className="relative">
