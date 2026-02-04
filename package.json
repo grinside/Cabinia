@@ -1,0 +1,36 @@
+{
+  "name": "cabinia",
+  "version": "1.0.0",
+  "description": "TikTok-Style Media PWA with Wallet Integration",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "deploy": "npm run build:frontend && gh-pages -d frontend/dist",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "gh-pages": "^6.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "pwa",
+    "tiktok",
+    "wallet",
+    "streaming",
+    "react"
+  ],
+  "author": "Cabinia Team",
+  "license": "MIT"
+}

@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply bg-dark-950 text-white;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe areas for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@layer components {
+  /* Video container with aspect ratio */
+  .video-container {
+    @apply relative w-full h-full bg-dark-900;
+    aspect-ratio: 9/16;
+    max-height: 100vh;
+  }
+
+  /* TikTok-style feed item */
+  .feed-item {
+    @apply relative w-full h-screen snap-start snap-always overflow-hidden;
+    scroll-snap-align: start;
+  }
+
+  /* Gradient overlays */
+  .gradient-top {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 50%);
+  }
+
+  .gradient-bottom {
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-dark-900/80 backdrop-blur-lg border border-white/10;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-primary-500 text-white font-semibold py-3 px-6 rounded-full
+           hover:bg-primary-600 active:scale-95 transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white/10 text-white font-medium py-3 px-6 rounded-full
+           hover:bg-white/20 active:scale-95 transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply text-white font-medium py-2 px-4 rounded-lg
+           hover:bg-white/10 active:scale-95 transition-all duration-200;
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3
+           text-white placeholder-dark-400 focus:border-primary-500
+           focus:ring-1 focus:ring-primary-500 outline-none transition-all;
+  }
+
+  /* Action button (like TikTok sidebar) */
+  .action-btn {
+    @apply flex flex-col items-center gap-1 text-white;
+  }
+
+  .action-btn-icon {
+    @apply w-12 h-12 rounded-full bg-dark-800/80 backdrop-blur flex items-center
+           justify-center active:scale-90 transition-transform;
+  }
+
+  /* Bottom navigation */
+  .nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-4 text-dark-400
+           transition-colors duration-200;
+  }
+
+  .nav-item.active {
+    @apply text-white;
+  }
+
+  /* Wallet card */
+  .wallet-card {
+    @apply relative overflow-hidden rounded-2xl p-6;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply w-8 h-8 border-3 border-white/30 border-t-white rounded-full animate-spin;
+  }
+
+  /* Swipe indicator */
+  .swipe-indicator {
+    @apply absolute bottom-20 left-1/2 -translate-x-1/2 text-white/60
+           text-sm animate-bounce;
+  }
+}
+
+@layer utilities {
+  /* Text shadow for video overlays */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0,0,0,0.8);
+  }
+
+  /* Truncate multiple lines */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Full screen container */
+  .full-screen {
+    height: 100vh;
+    height: 100dvh;
+  }
+}
