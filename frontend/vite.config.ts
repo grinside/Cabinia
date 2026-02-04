@@ -17,8 +17,8 @@ export default defineConfig({
         background_color: '#000000',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/Cabinia/',
+        start_url: '/Cabinia/',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -87,7 +87,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  base: './',
+  base: '/Cabinia/',
   build: {
     outDir: 'dist',
     sourcemap: false,
